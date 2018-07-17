@@ -1,0 +1,7 @@
+<div class="alert alert-danger">
+    <ul class="list-unstyled">
+        {% for error in errors %}
+            <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{ error.message }}</li>
+        {% endfor %}
+    </ul>
+</div>

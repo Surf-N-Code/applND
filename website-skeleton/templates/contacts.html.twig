@@ -1,4 +1,154 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-
+{% if(errors|length > 0) %}
+    {% include 'contacts_validation.html.twig' %}
+{% endif %}
+<div class="col-md-4 col-sm-12 col-xs-12">
+    {{ form_start(our_form) }}
+    <h2>Senden Sie uns eine Nachricht</h2>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.title, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Titel'
+                }
+            }) }}
+            {#<input id="r_username" class="form-control" data-validate-length-range="6" data-parsley-trigger="change" name="name" placeholder="username" required="required" type="text">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.firstName, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Vorname'
+                }
+            }) }}
+            {#<input type="email" id="r_email" name="email" required="required" class="form-control" placeholder="email" data-parsley-trigger="change">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.lastName, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Nachname'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.email, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'E-Mail'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.telephone, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Telefon'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.message, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Nachricht'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.street, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Straße'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.street_no, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Hausnummer'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.postcode, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'PLZ'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.city, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Ort'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_widget(our_form.subject, {
+                'attr' :
+                {
+                    'class' : 'form-control',
+                    'Placeholder' : 'Betreff'
+                }
+            }) }}
+            {#<input type="email" id="email2" name="confirm_email" data-parsley-equalto="#r_email" data-parsley-trigger="change" required="required" placeholder="repeat email" class="form-control">#}
+        </div>
+    </div>
+    <div class="item form-group">
+        <div>
+            {{ form_row(our_form.submit, {
+                'attr':
+                {
+                    'class' : 'form-control btn btn-primary submit'
+                }
+            }) }}
+            {#<input type="password" id="r_pass2" name="confirm_password" data-parsley-trigger="change" data-parsley-equalto="#r_pass" required="required" placeholder="repeat password" class="form-control">#}
+        </div>
+    </div>
+    {{ form_end(our_form) }}
+</div>
 {% endblock %}
