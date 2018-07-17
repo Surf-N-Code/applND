@@ -48,8 +48,6 @@ class ContactsController extends Controller
 
             if(count($errors) == 0 && $form->isValid()) {
                 //Save contact details to db
-
-                //Set new user data
                 $em = $this->getDoctrine()->getManager();
 
                 $em->persist($formData);

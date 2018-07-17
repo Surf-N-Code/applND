@@ -58,7 +58,7 @@ class Form extends Utils
 
     public function __construct()
     {
-        include "templates/PDFConfig.php"; 
+        include "templates/PDFConfig.php";
         //Set Session variables
         $_SESSION["choosed"] = filter_input(INPUT_POST, "tarifId");
         $_SESSION["nl"] = $this->formData["mnet_nl"];
@@ -223,10 +223,12 @@ class Form extends Utils
 //            }
             /**/
             //Lengthy ifs. changed to include ifs below
-            $date2 = sprintf("%02d", $this->formData["date_2_day"]) . "." . sprintf("%02d", $this->formData["date_2_day"]) . "." . $this->formData["date_2_year"];
+            $date2 = $this->zeroPad($this->formData["date_2_day"]) . "." . $this->zeroPad($this->formData["date_2_day"]) . "." . $this->formData["date_2_year"];
         } else {
             $date2 = "";
         }
+        /**/
+        //Separated into function
         $pdf = $this->generatePDF($tarif, $date2);
 
         $salesforce = new Salesforce($this->formData, $this->customer, $tarif, $pdf);
@@ -236,6 +238,8 @@ class Form extends Utils
             return $this->getContents();
         }
 
+        /**/
+        //Separated into function
         $this->sendMail($this->formData, $this->customer, $tarif, $pdf)
 
         return $this->redirect("Thankyou");

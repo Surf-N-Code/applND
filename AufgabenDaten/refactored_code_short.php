@@ -2,22 +2,16 @@
 
 class Form extends Utils
 {
-    //Q:
-    // Tarif
-    // chosenTarifCounterPart
-    // getContents
-    // post
-    // setConnectionTrigger
     protected $customer = "";
-    protected $chosenTarif = ""; //rename from choosedTarif
-    protected $chosenTarifCounterPart = ""; //$choosedTarifCounterPart
+    protected $chosenTarif = "";
+    protected $chosenTarifCounterPart = "";
     protected $newContractTerm = false;
-    protected $router = ""; //Added
-    public $bError = array(); //Set to array to avoid automatic type casting
+    protected $router = "";
+    public $bError = array();
     public $sTemplate = "templates/form.php";
     public $class = __CLASS__;
     public $formData = [
-        "router" => false, //Initialize with false
+        "router" => false,
         "sal" => "",
         "firstname" => "",
         "lastname" => '',
@@ -30,13 +24,13 @@ class Form extends Utils
         "birthdate_day" => '',
         "birthdate_month" => "",
         "birthdate_year" => "",
-        "contractterm" => 0, //Possibly better to set to false since its used as boolean?
+        "contractterm" => 0,
         "house_elevator" => 0,
         "isdn_ec_cash" => 0,
         "serverservice" => 0,
-        "mnet_optin" => 0, //Possibly better to set to false since its used as boolean?
+        "mnet_optin" => 0,
         "mnet_nl" => 0,
-        "comfort" => false, //Added since its being set in render
+        "comfort" => false,
     ];
     protected $additionalFields = [
         "date_1_day" => "",
@@ -56,6 +50,15 @@ class Form extends Utils
     ];
     protected $pdfData = [];
 
+    public function __construct()
+    {
+        include "templates/PDFConfig.php";
+        //Set Session variables
+        $_SESSION["choosed"] = filter_input(INPUT_POST, "tarifId");
+        $_SESSION["nl"] = $this->formData["mnet_nl"];
+
+        $this->formData["router"] = new Router();
+    }
 
     public function setCustomer($kdnr, $afnr)
     {
@@ -66,29 +69,19 @@ class Form extends Utils
 
     public function setChosenTarif()
     {
-        $this->chosenTarif = $_SESSION["tarife"][$_SESSION["choosed"]]; //should rename to $_SESSION['chosen'] for all instances
+        $this->chosenTarif = $_SESSION["tarife"][$_SESSION["choosed"]];
         return $this;
     }
 
     public function setChosenTarifCounterPart()
     {
-        if ($this->chosenTarif->getCounterpartIndex() && $this->chosenTarif->getContractTerm() !== 0) { //getContractTerm () were missing
+        if ($this->chosenTarif->getCounterpartIndex() && $this->chosenTarif->getContractTerm() !== 0) {
             $this->chosenTarifCounterPart = new Tarif();
             $this->chosenTarifCounterPart->load($this->chosenTarif->getCounterpartIndex());
         } else {
             $this->chosenTarifCounterPart = false;
         }
         return $this;
-    }
-
-    public function __construct()
-    {
-        include "templates/PDFConfig.php"; //Should use strategy pattern
-        //Set Session variables
-        $_SESSION["choosed"] = filter_input(INPUT_POST, "tarifId");
-        $_SESSION["nl"] = $this->formData["mnet_nl"];
-
-        $this->formData["router"] = new Router();
     }
 
     protected function zeroPad($str)
@@ -98,16 +91,16 @@ class Form extends Utils
 
     public function render()
     {
-        //@TODO: put into constructor?
         $this->setCustomer($_SESSION["kdnr"], $_SESSION["afnr"]);
         $this->setChosenTarif();
         $this->setChosenTarifCounterPart();
         $routerGroup = new Routergroup();
         $this->router = $routerGroup->loadRouter($this->chosenTarif->getNameId(), $this->customer->getGFast());
-        // Prefills Form Data
+
         if ($this->customer->getCampaignName() == "Normal") {
             $this->formData = array_merge($this->formData, $this->additionalFields);
         }
+
         if ($post) {
             if ($this->formData["router"] !== false) {
                 $this->formData["router"]->load($this->formData["router"]);
@@ -150,7 +143,6 @@ class Form extends Utils
             "nullvars" => $nullvars,
         ];
         $this->formData = $validationData["prevalidate"];
-
         if (count($this->bError) > 0) {
             return $this->getContents();
         }
@@ -163,7 +155,7 @@ class Form extends Utils
         $tarif->setConnectionTrigger($this->formData["comfort"]);
 
         if ($this->formData["date_2_day"] && $this->formData["date_2_month"] && $this->formData["date_2_year"]) {
-            $date2 = sprintf("%02d", $this->formData["date_2_day"]) . "." . sprintf("%02d", $this->formData["date_2_day"]) . "." . $this->formData["date_2_year"];
+            $date2 = $this->zeroPad($this->formData["date_2_day"]) . "." . $this->zeroPad($this->formData["date_2_day"]) . "." . $this->formData["date_2_year"];
         } else {
             $date2 = "";
         }
@@ -239,6 +231,7 @@ class Form extends Utils
         if ($nullvars["time-7-to-10"] && $nullvars["time-10-to-13"] && $nullvars["time-13-to-16"] && $nullvars["time-16-to-19"]) {
             $this->bError["date_1_time"] = true;
         }
+
         foreach ($nullvars as $index => $nullvar) {
             $this->bError[$index] = true;
             if(stristr($index, "time-alt-to"))
@@ -338,7 +331,7 @@ class Form extends Utils
             "time-alt-13-to-16" => FILTER_SANITIZE_STRING,
             "time-alt-16-to-19" => FILTER_SANITIZE_STRING,
         ];
-        if (filter_input(INPUT_POST, "router") !== 0) {
+        if (filter_input(INPUT_POST, "router") !== false) { //false for better readability?
             $validateArgs["date_1_day"] = [
                 "filter" => FILTER_CALLBACK,
                 "options" => [new CustomFilters(["min" => 1, "max" => 31]), "filterNummericRange",
