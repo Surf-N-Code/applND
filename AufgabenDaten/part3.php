@@ -6,6 +6,7 @@ $result = $DB->query("SELECT agenturID, kundenID
                       HAVING COUNT( 1 ) > 0
                       ORDER BY agenturID DESC ");
 
+//HAVING has no effect here since it always evaluates to true. Usually having acts as an additional filter after group by
 $agency = '';
 while ($data = $DB->fetch_row($result)) {
     if($data['agencyID'] == $agency){
@@ -16,4 +17,6 @@ while ($data = $DB->fetch_row($result)) {
         $agency = $data['agencyID'];
     }
 }
+//Code in if will only be executed if there are consecutive datasets within the db that have the same agencyID
+//No hours and minutes in date. Log files could be overridden.
 ?>
